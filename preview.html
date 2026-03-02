@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Uncle Earnie - Design Preview</title>
+  <style>
+    /* Design Tokens - Exact match from demo */
+    :root {
+      --bg-primary: #0a0f0d;
+      --bg-gradient-start: #0d1512;
+      --glass-light: rgba(255, 255, 255, 0.06);
+      --glass-medium: rgba(255, 255, 255, 0.08);
+      --glass-heavy: rgba(255, 255, 255, 0.10);
+      --glass-border: rgba(255, 255, 255, 0.10);
+      --text-primary: rgba(255, 255, 255, 0.92);
+      --text-secondary: rgba(255, 255, 255, 0.65);
+      --text-muted: rgba(255, 255, 255, 0.45);
+      --accent-primary: #86efac;
+      --accent-secondary: #6ee7b7;
+      --accent-muted: rgba(134, 239, 172, 0.15);
+      --danger: #fca5a5;
+      --warning: #fbbf24;
+      --space-xs: 8px;
+      --space-sm: 12px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+      --space-2xl: 48px;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 20px;
+      --radius-full: 9999px;
+      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.35);
+      --font-size-xs: 12px;
+      --font-size-sm: 13px;
+      --font-size-base: 14px;
+      --font-size-lg: 18px;
+      --font-size-xl: 22px;
+      --font-size-2xl: 28px;
+      --font-size-3xl: 36px;
+      --font-size-4xl: 48px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+      background: radial-gradient(ellipse at top left, var(--bg-gradient-start) 0%, var(--bg-primary) 50%);
+      background-attachment: fixed;
+      color: var(--text-primary);
+      line-height: 1.5;
+      font-size: var(--font-size-base);
+    }
+
+    .glass { background: var(--glass-light); backdrop-filter: blur(12px); border: 1px solid var(--glass-border); border-radius: var(--radius-xl); }
+    .glass-medium { background: var(--glass-medium); backdrop-filter: blur(16px); border: 1px solid var(--glass-border); border-radius: var(--radius-xl); }
+    .glass-heavy { background: var(--glass-heavy); backdrop-filter: blur(18px); border: 1px solid var(--glass-border); border-radius: var(--radius-xl); }
+
+    .app-container { display: flex; min-height: 100vh; padding: var(--space-lg); gap: var(--space-lg); max-width: 1920px; margin: 0 auto; }
+    
+    .sidebar { width: 260px; flex-shrink: 0; position: sticky; top: var(--space-lg); height: fit-content; }
+    .sidebar-inner { padding: var(--space-lg); }
+    .sidebar-brand { margin-bottom: var(--space-xl); }
+    .sidebar-brand h2 { font-size: var(--font-size-xl); color: var(--accent-primary); margin-bottom: 4px; }
+    .sidebar-brand p { font-size: var(--font-size-xs); color: var(--text-muted); margin: 0; }
+    
+    .sidebar-nav { list-style: none; }
+    .sidebar-nav li { margin-bottom: 4px; }
+    .sidebar-nav a { 
+      display: flex; align-items: center; gap: var(--space-sm); padding: 12px var(--space-md);
+      font-size: var(--font-size-sm); color: var(--text-secondary); text-decoration: none;
+      border-radius: var(--radius-md); transition: all 0.2s; position: relative;
+    }
+    .sidebar-nav a:hover { background: var(--glass-light); color: var(--text-primary); }
+    .sidebar-nav a.active { background: var(--glass-medium); color: var(--accent-primary); }
+    .sidebar-nav a.active::before {
+      content: ''; position: absolute; left: 0; top: 8px; bottom: 8px; width: 3px;
+      background: var(--accent-primary); border-radius: 0 2px 2px 0;
+    }
+
+    .main-content { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: var(--space-lg); }
+    .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-lg); }
+    .topbar-right { display: flex; align-items: center; gap: var(--space-sm); }
+    .visibility-points {
+      display: flex; align-items: center; padding: 8px 16px; background: var(--glass-light);
+      border: 1px solid var(--glass-border); border-radius: var(--radius-full);
+      font-size: var(--font-size-sm); font-weight: 600; color: var(--accent-primary);
+    }
+
+    .content-wrapper { max-width: 1200px; width: 100%; }
+    
+    .card { padding: var(--space-xl); box-shadow: var(--shadow-md); }
+    .card-md { padding: var(--space-lg); }
+
+    h1 { font-size: var(--font-size-4xl); font-weight: 800; line-height: 1.2; margin-bottom: var(--space-md); }
+    h2 { font-size: var(--font-size-3xl); font-weight: 700; margin-bottom: var(--space-md); }
+    h3 { font-size: var(--font-size-xl); font-weight: 600; margin-bottom: var(--space-md); }
+    h4 { font-size: var(--font-size-lg); font-weight: 600; margin-bottom: var(--space-sm); }
+    p { color: var(--text-secondary); margin-bottom: var(--space-md); }
+
+    .btn {
+      padding: 12px 24px; border: none; border-radius: var(--radius-md);
+      font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.2s;
+      font-size: var(--font-size-base);
+    }
+    .btn-primary { 
+      background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+      color: #0a0f0d;
+    }
+    .btn-secondary { background: transparent; color: var(--text-primary); border: 1px solid var(--glass-border); }
+
+    .chip {
+      display: inline-flex; align-items: center; padding: 4px 12px;
+      font-size: var(--font-size-xs); font-weight: 600; border-radius: var(--radius-full);
+      background: var(--glass-light); border: 1px solid var(--glass-border); color: var(--text-secondary);
+    }
+    .chip-accent { background: var(--accent-muted); border-color: rgba(134, 239, 172, 0.3); color: var(--accent-primary); }
+
+    .hero-panel {
+      padding: var(--space-2xl); min-height: 420px; position: relative; overflow: hidden;
+      display: grid; grid-template-columns: 1fr 240px; gap: var(--space-xl); align-items: start;
+    }
+    .hero-overlay {
+      position: absolute; inset: 0; 
+      background: linear-gradient(135deg, rgba(134, 239, 172, 0.05) 0%, rgba(10, 15, 13, 0.8) 100%);
+      border-radius: inherit; z-index: 1;
+    }
+    .hero-content { z-index: 2; display: flex; flex-direction: column; justify-content: center; }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: var(--space-xs); padding: 6px 14px;
+      background: var(--glass-medium); border: 1px solid var(--glass-border); border-radius: var(--radius-full);
+      font-size: var(--font-size-xs); font-weight: 600; color: var(--accent-primary);
+      width: fit-content; margin-bottom: var(--space-md);
+    }
+    .hero-title {
+      font-size: 36px; font-weight: 800; line-height: 1.1; margin-bottom: var(--space-md);
+      background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-primary) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-subtitle { font-size: var(--font-size-lg); color: var(--text-secondary); margin-bottom: var(--space-xl); max-width: 480px; }
+    .hero-actions { display: flex; gap: var(--space-md); }
+    .hero-widgets { z-index: 3; display: flex; flex-direction: column; gap: var(--space-lg); }
+
+    .advice-card {
+      padding: var(--space-md); background: var(--glass-light); border-radius: var(--radius-md);
+      border-left: 3px solid var(--accent-primary); display: flex; gap: var(--space-md);
+    }
+
+    .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-lg); }
+    
+    .progress-bar {
+      width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: var(--radius-sm); overflow: hidden;
+    }
+    .progress-fill { height: 100%; background: var(--accent-primary); transition: width 0.3s; }
+
+    .page { display: none; }
+    .page.active { display: block; }
+
+    .banner {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+      background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+      color: #0a0f0d; padding: var(--space-sm); text-align: center; font-weight: 600;
+      font-size: var(--font-size-sm);
+    }
+    body { padding-top: 40px; }
+  </style>
+</head>
+<body>
+  <div class="banner">
+    ⚡ DESIGN PREVIEW - Open this file in your browser to see the Uncle Earnie design system
+  </div>
+
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar glass">
+      <div class="sidebar-inner">
+        <div class="sidebar-brand">
+          <h2>Uncle Earnie</h2>
+          <p>Financial Education</p>
+        </div>
+        <nav>
+          <ul class="sidebar-nav">
+            <li><a href="#dashboard" class="nav-link active" data-page="dashboard">
+              <span>🏠</span><span>Home</span>
+            </a></li>
+            <li><a href="#profile" class="nav-link" data-page="profile">
+              <span>👤</span><span>Profile</span>
+            </a></li>
+            <li><a href="#wallet" class="nav-link" data-page="wallet">
+              <span>💰</span><span>Wallet</span>
+            </a></li>
+            <li><a href="#finances" class="nav-link" data-page="finances">
+              <span>💳</span><span>Finances</span>
+            </a></li>
+            <li><a href="#visibility" class="nav-link" data-page="visibility">
+              <span>👁️</span><span>Visibility Index</span>
+            </a></li>
+          </ul>
+        </nav>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Top Bar -->
+      <div class="topbar">
+        <div></div>
+        <div class="topbar-right">
+          <div class="visibility-points">
+            <span>Visibility Points: <strong>150</strong></span>
+          </div>
+          <div class="visibility-points">
+            <span>Preview Mode</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-wrapper">
+        <!-- Dashboard Page -->
+        <div id="dashboard" class="page active">
+          <section class="hero-panel glass-heavy card">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+              <div class="hero-eyebrow">✨ Welcome Back</div>
+              <h1 class="hero-title">Clarity First. Resilience Always.<br>Move with Confidence.</h1>
+              <p class="hero-subtitle">Track your financial visibility, build better habits, and connect with trusted partners.</p>
+              <div class="hero-actions">
+                <button class="btn btn-primary">Explore Games</button>
+                <button class="btn btn-secondary">View Goals</button>
+              </div>
+            </div>
+            <div class="hero-widgets">
+              <div class="glass-medium card-md">
+                <h4 style="font-size: var(--font-size-base); margin-bottom: 4px;">Visibility Index™</h4>
+                <div style="display: flex; align-items: center; justify-content: center; height: 80px; margin: var(--space-sm) 0;">
+                  <div style="font-size: 32px; font-weight: 700; color: var(--accent-primary);">
+                    67<span style="font-size: 18px; color: var(--text-muted);">/100</span>
+                  </div>
+                </div>
+                <div style="font-size: var(--font-size-xs); color: var(--text-secondary); text-align: center;">
+                  Risk Visibility: <strong style="color: var(--accent-primary);">Hazy</strong>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <div class="glass-medium card" style="margin-top: var(--space-lg);">
+            <h3>Uncle Earnie's Suggested Next Steps</h3>
+            <div style="display: flex; flex-direction: column; gap: var(--space-md);">
+              <div class="advice-card">
+                <span style="font-size: 24px;">🎮</span>
+                <div>
+                  <h4>Your Confidence Calibration is developing</h4>
+                  <p style="font-size: 13px; margin: 0;">Try the Risk Game to practise adjusting decisions.</p>
+                </div>
+              </div>
+              <div class="advice-card">
+                <span style="font-size: 24px;">💰</span>
+                <div>
+                  <h4>Cashflow shows spending is down 6%</h4>
+                  <p style="font-size: 13px; margin: 0;">Consider redirecting some into KiwiSaver or emergency fund.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: var(--space-lg);">
+            <h3>Quick Actions</h3>
+            <div class="stat-grid">
+              <div class="glass-light card-md">
+                <h4>Switch your KiwiSaver</h4>
+                <p style="font-size: 13px; margin-bottom: var(--space-md);">Find a better fit and maximise returns</p>
+                <button class="btn btn-primary" style="padding: 8px 16px; font-size: var(--font-size-sm);">Get started</button>
+              </div>
+              <div class="glass-light card-md">
+                <h4>Review insurance</h4>
+                <p style="font-size: 13px; margin-bottom: var(--space-md);">Better cover for less</p>
+                <button class="btn btn-primary" style="padding: 8px 16px; font-size: var(--font-size-sm);">Review cover</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Visibility Index Page -->
+        <div id="visibility" class="page">
+          <div>
+            <h1>Visibility Index™</h1>
+            <p>Your comprehensive view of financial risk awareness and decision-making capability</p>
+          </div>
+
+          <div class="glass-heavy card" style="margin-top: var(--space-lg);">
+            <div style="display: grid; grid-template-columns: 200px 1fr; gap: var(--space-2xl); align-items: center;">
+              <div style="text-align: center;">
+                <div style="width: 180px; height: 180px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, rgba(134, 239, 172, 0.15) 0%, rgba(16, 24, 20, 0.8) 60%); border: 1px solid rgba(134, 239, 172, 0.2); display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                  <div>
+                    <div style="font-size: 56px; font-weight: 700; color: var(--accent-primary);">67</div>
+                    <div style="font-size: var(--font-size-sm); color: var(--text-muted);">/ 100</div>
+                  </div>
+                </div>
+                <div style="margin-top: var(--space-md); font-size: var(--font-size-sm); color: var(--text-secondary);">
+                  Risk Visibility: <strong style="color: var(--accent-primary);">Hazy</strong>
+                </div>
+              </div>
+              <div>
+                <h3>Your Four Pillars</h3>
+                <div style="display: flex; flex-direction: column; gap: var(--space-md);">
+                  <div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                      <span style="font-size: var(--font-size-sm);">Decision Clarity</span>
+                      <div style="display: flex; gap: var(--space-xs); align-items: center;">
+                        <span style="font-size: var(--font-size-sm); font-weight: 600; color: var(--accent-primary);">68</span>
+                        <span class="chip chip-accent">Steady</span>
+                      </div>
+                    </div>
+                    <div class="progress-bar"><div class="progress-fill" style="width: 68%;"></div></div>
+                  </div>
+                  <div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                      <span style="font-size: var(--font-size-sm);">Confidence Calibration</span>
+                      <div style="display: flex; gap: var(--space-xs); align-items: center;">
+                        <span style="font-size: var(--font-size-sm); font-weight: 600; color: var(--warning);">61</span>
+                        <span class="chip" style="background: rgba(251, 191, 36, 0.15); border-color: rgba(251, 191, 36, 0.3); color: var(--warning);">Developing</span>
+                      </div>
+                    </div>
+                    <div class="progress-bar"><div class="progress-fill" style="width: 61%; background: var(--warning);"></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Finances Page -->
+        <div id="finances" class="page">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <h1>Finances</h1>
+              <p>Track your accounts, spending, and financial health</p>
+            </div>
+            <button class="btn btn-primary">📤 Upload CSV</button>
+          </div>
+
+          <div class="glass-heavy card" style="margin-top: var(--space-lg);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div style="font-size: var(--font-size-xs); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; color: var(--text-secondary);">Total Net Worth</div>
+                <div style="font-size: var(--font-size-4xl); font-weight: 700; color: var(--accent-primary);">$14,850.20</div>
+                <div style="font-size: var(--font-size-sm); color: var(--accent-primary); margin-top: 4px;">↑ 5.2% from last month</div>
+              </div>
+              <div style="width: 120px; height: 120px; border-radius: 50%; background: radial-gradient(circle, rgba(134, 239, 172, 0.2) 0%, transparent 70%); display: flex; align-items: center; justify-content: center; font-size: 48px;">💰</div>
+            </div>
+          </div>
+
+          <div style="margin-top: var(--space-lg);">
+            <h3>Your Accounts</h3>
+            <div class="stat-grid">
+              <div class="glass-medium card-md">
+                <div style="margin-bottom: var(--space-sm);"><span class="chip chip-accent">Transaction</span></div>
+                <h4>Everyday Account</h4>
+                <p style="font-size: var(--font-size-2xl); font-weight: 700; color: var(--accent-primary); margin: 0;">$3,240.50</p>
+              </div>
+              <div class="glass-medium card-md">
+                <div style="margin-bottom: var(--space-sm);"><span class="chip chip-accent">Savings</span></div>
+                <h4>Savings</h4>
+                <p style="font-size: var(--font-size-2xl); font-weight: 700; color: var(--accent-secondary); margin: 0;">$12,850.00</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Profile Page -->
+        <div id="profile" class="page">
+          <div>
+            <h1>Profile</h1>
+            <p>Manage your account settings and preferences</p>
+          </div>
+
+          <div class="glass-heavy card" style="margin-top: var(--space-lg);">
+            <div style="display: flex; gap: var(--space-xl); align-items: flex-start;">
+              <div style="width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%); display: flex; align-items: center; justify-content: center; font-size: 48px; flex-shrink: 0;">👤</div>
+              <div style="flex: 1;">
+                <div style="display: flex; align-items: center; gap: var(--space-md); margin-bottom: var(--space-md);">
+                  <h2 style="margin: 0;">Demo User</h2>
+                  <span class="chip chip-accent">Demo Status</span>
+                </div>
+                <p style="margin-bottom: var(--space-md);">demo@uncleearnie.com</p>
+                <div style="display: flex; gap: var(--space-md); margin-bottom: var(--space-lg);">
+                  <div>
+                    <div style="font-size: var(--font-size-xs); color: var(--text-muted); margin-bottom: 4px;">Member Since</div>
+                    <div style="font-size: var(--font-size-base); font-weight: 600;">March 2026</div>
+                  </div>
+                  <div style="width: 1px; background: var(--glass-border);"></div>
+                  <div>
+                    <div style="font-size: var(--font-size-xs); color: var(--text-muted); margin-bottom: 4px;">Visibility Points</div>
+                    <div style="font-size: var(--font-size-base); font-weight: 600; color: var(--accent-primary);">150</div>
+                  </div>
+                </div>
+                <button class="btn btn-secondary" style="padding: 8px 16px; font-size: var(--font-size-sm);">Edit Profile</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Wallet Page -->
+        <div id="wallet" class="page">
+          <div>
+            <h1>Wallet</h1>
+            <p>Track your Visibility Points balance and activity</p>
+          </div>
+
+          <div class="glass-heavy card" style="margin-top: var(--space-lg);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div style="font-size: var(--font-size-xs); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; color: var(--text-secondary);">Visibility Points Balance</div>
+                <div style="font-size: var(--font-size-4xl); font-weight: 700; color: var(--accent-primary);">150</div>
+                <div style="font-size: var(--font-size-sm); color: var(--text-secondary); margin-top: var(--space-xs);">Earn points by completing games and activities</div>
+              </div>
+              <div style="width: 120px; height: 120px; border-radius: 50%; background: radial-gradient(circle, rgba(134, 239, 172, 0.2) 0%, transparent 70%); display: flex; align-items: center; justify-content: center; font-size: 56px;">💰</div>
+            </div>
+          </div>
+
+          <div style="margin-top: var(--space-lg);">
+            <h3>Recent Activity</h3>
+            <div style="display: flex; flex-direction: column; gap: var(--space-sm);">
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--space-md); background: var(--glass-light); border-radius: var(--radius-md); border-left: 3px solid var(--accent-primary);">
+                <div>
+                  <div style="font-size: var(--font-size-base); margin-bottom: 4px;">Completed Risk Game</div>
+                  <div style="font-size: var(--font-size-xs); color: var(--text-muted);">Mar 2, 2026</div>
+                </div>
+                <div style="font-size: var(--font-size-lg); font-weight: 700; color: var(--accent-primary);">+10</div>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--space-md); background: var(--glass-light); border-radius: var(--radius-md); border-left: 3px solid var(--accent-primary);">
+                <div>
+                  <div style="font-size: var(--font-size-base); margin-bottom: 4px;">Daily Login Bonus</div>
+                  <div style="font-size: var(--font-size-xs); color: var(--text-muted);">Mar 1, 2026</div>
+                </div>
+                <div style="font-size: var(--font-size-lg); font-weight: 700; color: var(--accent-primary);">+5</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Simple page navigation
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const pageId = link.dataset.page;
+        
+        // Update active nav
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+        
+        // Show page
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
