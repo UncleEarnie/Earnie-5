@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Earnie - Financial Education Platform</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      /* Colors */
+      --bg-primary: #0a0f0d;
+      --bg-secondary: #111917;
+      --glass-light: rgba(255, 255, 255, 0.03);
+      --glass-medium: rgba(255, 255, 255, 0.06);
+      --glass-heavy: rgba(255, 255, 255, 0.1);
+      --accent-primary: #86efac;
+      --accent-secondary: #34d399;
+      --accent-tertiary: #10b981;
+      --text-primary: rgba(255, 255, 255, 0.95);
+      --text-secondary: rgba(255, 255, 255, 0.7);
+      --text-tertiary: rgba(255, 255, 255, 0.5);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      
+      /* Spacing */
+      --space-xs: 8px;
+      --space-sm: 12px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+      --space-2xl: 48px;
+      
+      /* Typography */
+      --font-xs: 12px;
+      --font-sm: 14px;
+      --font-base: 16px;
+      --font-lg: 18px;
+      --font-xl: 20px;
+      --font-2xl: 24px;
+      --font-3xl: 32px;
+      --font-4xl: 48px;
+      
+      /* Shadows */
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+      
+      /* Radius */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-full: 9999px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.5;
+    }
+
+    .app-container {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--border-subtle);
+      padding: var(--space-lg);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .logo {
+      font-size: var(--font-2xl);
+      font-weight: 700;
+      color: var(--accent-primary);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .nav-item {
+      padding: var(--space-sm) var(--space-md);
+      margin-bottom: var(--space-xs);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s;
+      color: var(--text-secondary);
+      font-size: var(--font-sm);
+    }
+
+    .nav-item:hover {
+      background: var(--glass-light);
+      color: var(--text-primary);
+    }
+
+    .nav-item.active {
+      background: var(--glass-medium);
+      color: var(--accent-primary);
+      border-left: 3px solid var(--accent-primary);
+      padding-left: calc(var(--space-md) - 3px);
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .topbar {
+      height: 64px;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 0 var(--space-xl);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .page-title {
+      font-size: var(--font-xl);
+      font-weight: 600;
+    }
+
+    .user-info {
+      color: var(--text-secondary);
+      font-size: var(--font-sm);
+    }
+
+    .content-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--space-xl);
+    }
+
+    /* Cards */
+    .card {
+      background: var(--glass-medium);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      margin-bottom: var(--space-lg);
+    }
+
+    .card-title {
+      font-size: var(--font-lg);
+      font-weight: 600;
+      margin-bottom: var(--space-md);
+    }
+
+    /* Hero Panel */
+    .hero-panel {
+      background: linear-gradient(135deg, var(--glass-heavy) 0%, var(--glass-medium) 100%);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: var(--space-2xl);
+      margin-bottom: var(--space-xl);
+    }
+
+    .hero-title {
+      font-size: var(--font-3xl);
+      font-weight: 700;
+      margin-bottom: var(--space-md);
+    }
+
+    .hero-subtitle {
+      font-size: var(--font-lg);
+      color: var(--text-secondary);
+    }
+
+    /* Grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--space-lg);
+      margin-bottom: var(--space-xl);
+    }
+
+    /* Stat Card */
+    .stat-card {
+      background: var(--glass-light);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+    }
+
+    .stat-label {
+      font-size: var(--font-sm);
+      color: var(--text-tertiary);
+      margin-bottom: var(--space-xs);
+    }
+
+    .stat-value {
+      font-size: var(--font-2xl);
+      font-weight: 700;
+      color: var(--accent-primary);
+    }
+
+    /* Visibility Score */
+    .visibility-widget {
+      background: var(--glass-medium);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      text-align: center;
+    }
+
+    .score-circle {
+      width: 180px;
+      height: 180px;
+      margin: 0 auto var(--space-lg);
+      border-radius: 50%;
+      border: 12px solid var(--glass-heavy);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background: var(--bg-primary);
+    }
+
+    .score-value {
+      font-size: var(--font-4xl);
+      font-weight: 700;
+      color: var(--accent-primary);
+    }
+
+    /* Progress Bar */
+    .progress-bar {
+      height: 8px;
+      background: var(--glass-light);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      margin-top: var(--space-sm);
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--accent-primary);
+      border-radius: var(--radius-full);
+      transition: width 0.3s;
+    }
+
+    /* Advice Card */
+    .advice-card {
+      background: var(--glass-light);
+      border: 1px solid var(--border-subtle);
+      border-left: 4px solid var(--accent-primary);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      margin-bottom: var(--space-md);
+    }
+
+    .advice-title {
+      font-size: var(--font-base);
+      font-weight: 600;
+      margin-bottom: var(--space-sm);
+    }
+
+    .advice-text {
+      font-size: var(--font-sm);
+      color: var(--text-secondary);
+    }
+
+    /* Button */
+    .btn {
+      padding: var(--space-sm) var(--space-lg);
+      border-radius: var(--radius-sm);
+      border: none;
+      font-size: var(--font-sm);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--accent-primary);
+      color: var(--bg-primary);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-secondary);
+    }
+
+    /* Page container */
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    /* Pillar */
+    .pillar {
+      margin-bottom: var(--space-lg);
+    }
+
+    .pillar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-sm);
+    }
+
+    .pillar-name {
+      font-size: var(--font-base);
+      font-weight: 600;
+    }
+
+    .pillar-score {
+      color: var(--accent-primary);
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">Earnie</div>
+      <nav>
+        <div class="nav-item active" onclick="switchPage('dashboard')">🏠 Dashboard</div>
+        <div class="nav-item" onclick="switchPage('visibility')">📊 Visibility Index</div>
+        <div class="nav-item" onclick="switchPage('finances')">💰 Finances</div>
+        <div class="nav-item" onclick="switchPage('insights')">💡 Insights</div>
+        <div class="nav-item" onclick="switchPage('budgeting')">📋 Budgeting</div>
+        <div class="nav-item" onclick="switchPage('kiwisaver')">🥝 KiwiSaver</div>
+        <div class="nav-item" onclick="switchPage('networth')">📈 Net Worth</div>
+        <div class="nav-item" onclick="switchPage('goals')">🎯 Goals</div>
+        <div class="nav-item" onclick="switchPage('wallet')">👛 Wallet</div>
+        <div class="nav-item" onclick="switchPage('profile')">👤 Profile</div>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="topbar">
+        <div class="page-title" id="pageTitle">Dashboard</div>
+        <div class="user-info">henry@example.com</div>
+      </div>
+
+      <div class="content-area">
+        <!-- Dashboard Page -->
+        <div id="dashboard" class="page active">
+          <div class="hero-panel">
+            <h1 class="hero-title">Welcome back, Henry!</h1>
+            <p class="hero-subtitle">Your financial visibility score is improving</p>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 320px; gap: var(--space-xl);">
+            <div>
+              <h2 style="margin-bottom: var(--space-lg); font-size: var(--font-xl);">Uncle Earnie's Advice</h2>
+              
+              <div class="advice-card">
+                <div class="advice-title">📊 Review Your Spending Categories</div>
+                <div class="advice-text">You've spent 85% of your groceries budget this month. Consider meal planning to reduce costs.</div>
+              </div>
+
+              <div class="advice-card">
+                <div class="advice-title">💡 Increase Your Emergency Fund</div>
+                <div class="advice-text">Your emergency fund covers 2.5 months of expenses. Aim for 3-6 months for better security.</div>
+              </div>
+
+              <div class="advice-card">
+                <div class="advice-title">🎯 Track Your Goals</div>
+                <div class="advice-text">You're 60% toward your vacation goal! Keep up the momentum.</div>
+              </div>
+            </div>
+
+            <div class="visibility-widget">
+              <h3 style="margin-bottom: var(--space-lg);">Visibility Index</h3>
+              <div class="score-circle">
+                <div class="score-value">67<span style="font-size: var(--font-xl); color: var(--text-secondary);">/100</span></div>
+              </div>
+              <button class="btn btn-primary">View Details</button>
+            </div>
+          </div>
+
+          <h2 style="margin: var(--space-2xl) 0 var(--space-lg); font-size: var(--font-xl);">Quick Actions</h2>
+          <div class="grid">
+            <div class="stat-card">
+              <div class="stat-label">Net Worth</div>
+              <div class="stat-value">$42,580</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Monthly Spending</div>
+              <div class="stat-value">$3,240</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Active Goals</div>
+              <div class="stat-value">3</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Visibility Index Page -->
+        <div id="visibility" class="page">
+          <div class="card">
+            <div style="text-align: center; margin-bottom: var(--space-2xl);">
+              <div class="score-circle" style="margin-bottom: var(--space-xl);">
+                <div class="score-value">67<span style="font-size: var(--font-xl); color: var(--text-secondary);">/100</span></div>
+              </div>
+              <h2 style="font-size: var(--font-2xl); margin-bottom: var(--space-sm);">Good Financial Visibility</h2>
+              <p style="color: var(--text-secondary);">You're making progress! Focus on the areas below to improve.</p>
+            </div>
+
+            <h3 style="margin-bottom: var(--space-lg);">Four Pillars</h3>
+
+            <div class="pillar">
+              <div class="pillar-header">
+                <div class="pillar-name">💡 Decision Clarity</div>
+                <div class="pillar-score">75/100</div>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 75%;"></div>
+              </div>
+            </div>
+
+            <div class="pillar">
+              <div class="pillar-header">
+                <div class="pillar-name">🎯 Confidence Calibration</div>
+                <div class="pillar-score">62/100</div>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 62%;"></div>
+              </div>
+            </div>
+
+            <div class="pillar">
+              <div class="pillar-header">
+                <div class="pillar-name">📊 Information Quality</div>
+                <div class="pillar-score">58/100</div>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 58%;"></div>
+              </div>
+            </div>
+
+            <div class="pillar">
+              <div class="pillar-header">
+                <div class="pillar-name">🔄 Adaptive Learning</div>
+                <div class="pillar-score">70/100</div>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 70%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Finances Page -->
+        <div id="finances" class="page">
+          <div class="card">
+            <h2 class="card-title">Net Worth Overview</h2>
+            <div class="stat-value">$42,580</div>
+            <p style="color: var(--text-secondary); margin-top: var(--space-sm);">↑ $1,240 from last month</p>
+          </div>
+
+          <div class="card">
+            <h2 class="card-title">Import Transactions</h2>
+            <p style="color: var(--text-secondary); margin-bottom: var(--space-lg);">Upload your bank statements to track spending</p>
+            <button class="btn btn-primary">Upload CSV</button>
+          </div>
+
+          <div class="card">
+            <h2 class="card-title">Monthly Spending by Category</h2>
+            
+            <div class="pillar">
+              <div class="pillar-header">
+                <div class="pillar-name">🏠 Housing</div>
+                <div class="pillar-score">$1,200</div>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 60%;"></div>
+              </div>
+            </div>
+
+            <div class="pillar">
+              <div class="pillar-header">
+                <div class="pillar-name">🍔 Food & Dining</div>
+                <div class="pillar-score">$680</div>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 85%;"></div>
+              </div>
+            </div>
+
+            <div class="pillar">
+              <div class="pillar-header">
+                <div class="pillar-name">🚗 Transportation</div>
+                <div class="pillar-score">$420</div>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 42%;"></div>
+              </div>
+            </div>
+
+            <div class="pillar">
+              <div class="pillar-header">
+                <div class="pillar-name">🎬 Entertainment</div>
+                <div class="pillar-score">$280</div>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 28%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Other pages (simplified) -->
+        <div id="insights" class="page">
+          <div class="card">
+            <h2 class="card-title">Insights</h2>
+            <p style="color: var(--text-secondary);">AI-powered financial insights and recommendations will appear here.</p>
+          </div>
+        </div>
+
+        <div id="budgeting" class="page">
+          <div class="card">
+            <h2 class="card-title">Budgeting</h2>
+            <p style="color: var(--text-secondary);">Set and track your monthly budgets by category.</p>
+          </div>
+        </div>
+
+        <div id="kiwisaver" class="page">
+          <div class="card">
+            <h2 class="card-title">KiwiSaver</h2>
+            <p style="color: var(--text-secondary);">Track your KiwiSaver balance and contributions.</p>
+          </div>
+        </div>
+
+        <div id="networth" class="page">
+          <div class="card">
+            <h2 class="card-title">Net Worth Tracker</h2>
+            <p style="color: var(--text-secondary);">View your net worth trends over time.</p>
+          </div>
+        </div>
+
+        <div id="goals" class="page">
+          <div class="card">
+            <h2 class="card-title">Financial Goals</h2>
+            <p style="color: var(--text-secondary);">Set and track your financial goals.</p>
+          </div>
+        </div>
+
+        <div id="wallet" class="page">
+          <div class="card">
+            <h2 class="card-title">Wallet</h2>
+            <p style="color: var(--text-secondary);">Manage your payment methods and connected accounts.</p>
+          </div>
+        </div>
+
+        <div id="profile" class="page">
+          <div class="card">
+            <h2 class="card-title">Profile Settings</h2>
+            <p style="color: var(--text-secondary); margin-bottom: var(--space-lg);">Manage your account information</p>
+            
+            <div style="margin-bottom: var(--space-md);">
+              <div class="stat-label">Email</div>
+              <div style="color: var(--text-primary); margin-top: var(--space-xs);">henry@example.com</div>
+            </div>
+
+            <div style="margin-bottom: var(--space-md);">
+              <div class="stat-label">Full Name</div>
+              <div style="color: var(--text-primary); margin-top: var(--space-xs);">Henry</div>
+            </div>
+
+            <div style="margin-bottom: var(--space-lg);">
+              <div class="stat-label">Visibility Points</div>
+              <div style="color: var(--accent-primary); margin-top: var(--space-xs); font-size: var(--font-xl); font-weight: 600;">150</div>
+            </div>
+
+            <button class="btn btn-primary">Update Profile</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    function switchPage(pageId) {
+      // Hide all pages
+      document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+      });
+      
+      // Show selected page
+      document.getElementById(pageId).classList.add('active');
+      
+      // Update navigation
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      
+      // Update page title
+      const titles = {
+        'dashboard': 'Dashboard',
+        'visibility': 'Visibility Index',
+        'finances': 'Finances',
+        'insights': 'Insights',
+        'budgeting': 'Budgeting',
+        'kiwisaver': 'KiwiSaver',
+        'networth': 'Net Worth',
+        'goals': 'Goals',
+        'wallet': 'Wallet',
+        'profile': 'Profile'
+      };
+      document.getElementById('pageTitle').textContent = titles[pageId];
+    }
+  </script>
+</body>
+</html>
