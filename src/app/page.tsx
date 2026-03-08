@@ -11,7 +11,7 @@ export default function HomePage() {
   useEffect(() => {
     if (!loading) {
       if (user) {
-        router.push('/dashboard')
+        router.push('/home')
       } else {
         router.push('/auth/login')
       }
@@ -19,17 +19,17 @@ export default function HomePage() {
   }, [user, loading, router])
 
   return (
-    <div style={{
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      minHeight: '100vh',
-      color: 'var(--text-primary)'
-    }}>
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '100vh',
+        color: 'var(--text-primary)',
+      }}
+    >
       <div style={{ textAlign: 'center' }}>
-        <h1 style={{ color: 'var(--accent-primary)', marginBottom: 'var(--space-md)' }}>
-          Uncle Earnie
-        </h1>
+        <h1 style={{ color: 'var(--accent-primary)', marginBottom: 'var(--space-md)' }}>Uncle Earnie</h1>
         <p style={{ color: 'var(--text-secondary)' }}>Loading...</p>
       </div>
     </div>
